@@ -1,0 +1,519 @@
+{
+  "name": "projeto_atm",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1177dfb8-8b50-4baf-979d-ca949be4c777",
+              "name": "idConversa",
+              "value": "={{ $('Webhook').item.json.body.chatLid }}",
+              "type": "string"
+            },
+            {
+              "id": "c8fcf443-5b3d-427e-9a55-d15d971dfbc3",
+              "name": "Nome",
+              "value": "={{ $('Webhook').item.json.body.chatName }}",
+              "type": "string"
+            },
+            {
+              "id": "a7635c93-f92b-41e4-9bc2-1327b040e980",
+              "name": "Numero",
+              "value": "={{ $('Webhook').item.json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "f513b746-11e1-408d-b9b4-28f9ec21120d",
+              "name": "Mensagem",
+              "value": "={{ $json.body.text.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        304
+      ],
+      "id": "d33c7a10-933f-42ed-a3ce-b0e0fad2e88c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.Mensagem }}",
+        "options": {
+          "systemMessage": "🧩 Prompt — Agente de IA de Agendamento (HM Soluções em TI)\n\nIdentidade:\nVocê é TechSchedule, assistente virtual da HM Soluções em TI.\nSua função é agendar, consultar e cancelar visitas técnicas de forma clara, rápida e educada.\n\n⚙️ Funções principais\n\nAgendar visita técnica\n\nConsultar agenda (buscar eventos)\n\nCancelar agendamento (deletar eventos)\n\nCada evento deve conter:\n\nTítulo: [Nome do Cliente] - [Tipo de Serviço]\n(Ex: “Carlos Souza - Instalação de Rede Wi-Fi”)\n\nData e hora (entre 08:00 e 18:00)\n\nLocal (endereço ou remoto)\n\nDescrição: breve resumo do serviço\n\n🕐 Regras de operação\n\nAtendimentos apenas das 08:00 às 18:00.\n\nSempre confirmar data, hora, local e serviço antes de criar ou apagar.\n\nSe o horário não estiver disponível, sugerir 3 opções próximas.\nEx: “Posso te atender às 09:00, 13:30 ou 16:00. Qual prefere?”\n\nNunca criar, editar ou cancelar sem confirmação do cliente.\n\nApós confirmar, enviar resposta resumida e positiva.\n\n💬 Estilo de comunicação\n\nTom: profissional, calmo e prestativo.\n\nFrases curtas, naturais e humanas.\n\nEmojis leves (💻📅🙂) quando couber.\n\nSempre encerrar com gratidão e simpatia.\n\n💭 Exemplos de respostas\n\nSaudação inicial:\n“Olá! 👋 Sou o TechSchedule da HM Soluções em TI. Posso te ajudar a agendar, consultar ou cancelar uma visita técnica?”\n\nApresentar horários disponíveis:\n“Hoje tenho 09:00, 11:00, 14:30 e 16:00. Qual desses horários é melhor pra você?”\n\nConfirmação de agendamento:\n“Tudo certo! ✅ Agendei Carlos Souza - Instalação de Rede Wi-Fi para terça, às 14:00. Se precisar remarcar, é só avisar!”\n\nConsulta de agenda:\n“Suas visitas marcadas:\n• 10/10 – 09:00 – João Lima - Manutenção de Servidor\n• 12/10 – 15:30 – Ana Melo - Suporte de Rede\nQuer manter ou cancelar alguma?”\n\nCancelamento:\n“Cancelei o agendamento de Ana Melo - Suporte de Rede (12/10 às 15:30). Deseja reagendar outro horário?”\n\nEncerramento:\n“Obrigado pelo contato! 😊\nA HM Soluções em TI está sempre à disposição.”\n\n🧠 Exemplos de intenções dos clientes\n\nAgendar:\n“Quero marcar uma visita.” / “Tem horário amanhã?” / “Preciso de suporte hoje à tarde.”\n\nConsultar:\n“Quais visitas tenho marcadas?” / “Quero confirmar o horário do técnico.”\n\nCancelar:\n“Pode cancelar a visita das 15h?” / “Não vou poder amanhã.”\n\n🔗 Integração com Google Calendar (via n8n)\n\nAo confirmar o agendamento, o agente deve enviar ao Google Calendar os seguintes dados:\n\nCampo\tValor\nsummary\t[Nome do Cliente] - [Tipo de Serviço]\nstart\t[Data e hora confirmada]\nend\t[Data e hora + duração padrão (ex: +1h)]\nlocation\t[Endereço informado ou “Atendimento remoto”]\ndescription\tVisita técnica agendada via TechSchedule (HM Soluções em TI)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        304
+      ],
+      "id": "7ba4447e-c89f-43b3-87bf-1d810304d6d8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields').item.json.idConversa }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1568,
+        80
+      ],
+      "id": "72ca37ad-cfd4-4a23-9d0a-63284706c159",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2112,
+        128
+      ],
+      "id": "839af9d0-71e6-4ea2-9750-944059a2cb07",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Receber-mensagem-zapi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        320
+      ],
+      "id": "f35bab0b-55d5-40f2-aea6-e528bd7e2a3a",
+      "name": "Webhook",
+      "webhookId": "69195619-c012-4ef1-b6c3-93a8c85cadd0"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6103ab95-f657-4e62-8cfe-d7e75758fddb",
+              "leftValue": "={{ $json.body.isGroup }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "dcfda64e-86d6-4861-91e6-a36912dd4c12",
+              "leftValue": "={{ $json.body.isNewsletter }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d87b7bde-ff12-42e0-b524-d95f238471ae",
+              "leftValue": "={{ $json.body.broadcast }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        320
+      ],
+      "id": "fa53811b-b617-44d0-987f-330654991778",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        560,
+        144
+      ],
+      "id": "925f6c7b-ae30-41d2-a383-1db65bb1edd2",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1872,
+        128
+      ],
+      "id": "fe12663d-b5d1-4b04-b1b3-f5457c5f7a8f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $now }}",
+        "format": "custom",
+        "customFormat": "EEEE, MMMM dd yyyy 'at' hh:mm:ss",
+        "options": {
+          "timezone": true
+        }
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        304
+      ],
+      "id": "a021857e-cad2-4080-a3ea-50c37e1d3ab5",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "584c60acf489442811177c5dead2a0575afab380dd259af7625497bf6547a7c7@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Agenda de teste N8N"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        608
+      ],
+      "id": "40d58d74-45a2-4dfc-9be3-4041174238ae",
+      "name": "Buscar Evento"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "584c60acf489442811177c5dead2a0575afab380dd259af7625497bf6547a7c7@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Agenda de teste N8N"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `2025-10-09T14:00:00-03:00)`, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `2025-10-09T14:00:00-03:00)`, 'string') }}",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "description": "Visita Tecnica"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1696,
+        608
+      ],
+      "id": "60e29be0-fe5c-42fa-8ade-895132c84c07",
+      "name": "Marcar evento"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1424,
+        80
+      ],
+      "id": "23f26e90-1442-4066-99ac-d64e8351a4aa",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1888,
+        672
+      ],
+      "id": "102b095a-fa18-4ede-bd28-d31094392464",
+      "name": "Embeddings OpenAI1"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "tableName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1888,
+        528
+      ],
+      "id": "dee81238-2386-4c4f-a28c-ff96464791af",
+      "name": "Busca Dados"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        992,
+        304
+      ],
+      "id": "5a37334d-10c7-44c8-8221-1045ccf6ed4f",
+      "name": "Atualiza dados",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "KiOjZ1J2yCq5iccI",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1392,
+        608
+      ],
+      "id": "7871589e-fc64-43ed-8e36-305af68bac63",
+      "name": "Delete an event in Google Calendar"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Atualiza dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Busca Dados",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca Dados": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza dados": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bdf8fe6b-ea5f-4ed7-995e-ab7be9de3e22",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "464442b33225a2e695074e17704003de02e5aaa4323e83ebb6d4cac499a38951"
+  },
+  "id": "OpFrrr4bAW2LW5Jd",
+  "tags": []
+}
