@@ -98,7 +98,7 @@
       ],
       "id": "f35bab0b-55d5-40f2-aea6-e528bd7e2a3a",
       "name": "Webhook",
-      "webhookId": "69195619-c012-4ef1-b6c3-93a8c85cadd0"
+      "webhookId": "{{WEBHOOK_ID}}"
     },
     {
       "parameters": {
@@ -203,7 +203,7 @@
         "resource": "calendar",
         "calendar": {
           "__rl": true,
-          "value": "584c60acf489442811177c5dead2a0575afab380dd259af7625497bf6547a7c7@group.calendar.google.com",
+          "value": "{{GOOGLE_CALENDAR_ID}}",
           "mode": "list",
           "cachedResultName": "Agenda de teste N8N"
         },
@@ -222,12 +222,12 @@
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "584c60acf489442811177c5dead2a0575afab380dd259af7625497bf6547a7c7@group.calendar.google.com",
+          "value": "{{GOOGLE_CALENDAR_ID}}",
           "mode": "list",
           "cachedResultName": "Agenda de teste N8N"
         },
-        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', `2025-10-09T14:00:00-03:00)`, 'string') }}",
-        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', `2025-10-09T14:00:00-03:00)`, 'string') }}",
+        "start": "={{ $fromAI('Start', `{{DEFAULT_EVENT_START}}`) }}",
+        "end": "={{ $fromAI('End', `{{DEFAULT_EVENT_END}}`) }}",
         "useDefaultReminders": false,
         "additionalFields": {
           "description": "Visita Tecnica"
@@ -297,12 +297,12 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "",
+          "value": "{{GOOGLE_SHEET_ID}}",
           "mode": "url"
         },
         "sheetName": {
           "__rl": true,
-          "value": "",
+          "value": "{{GOOGLE_SHEET_NAME}}",
           "mode": "url"
         }
       },
@@ -313,21 +313,15 @@
         304
       ],
       "id": "5a37334d-10c7-44c8-8221-1045ccf6ed4f",
-      "name": "Atualiza dados",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "KiOjZ1J2yCq5iccI",
-          "name": "Google Sheets account 2"
-        }
-      }
+      "name": "Atualiza dados"
     },
     {
       "parameters": {
         "operation": "delete",
         "calendar": {
           "__rl": true,
-          "mode": "list",
-          "value": ""
+          "value": "{{GOOGLE_CALENDAR_ID}}",
+          "mode": "list"
         },
         "options": {}
       },
@@ -512,7 +506,7 @@
   "versionId": "bdf8fe6b-ea5f-4ed7-995e-ab7be9de3e22",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "464442b33225a2e695074e17704003de02e5aaa4323e83ebb6d4cac499a38951"
+    "instanceId": "{{INSTANCE_ID}}"
   },
   "id": "OpFrrr4bAW2LW5Jd",
   "tags": []
